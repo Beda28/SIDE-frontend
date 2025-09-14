@@ -1,7 +1,7 @@
 # SIDE-frontend
 
 ## 환경설정
-windows
+windows  
 node_modules import
 ```bash
 pnpm i
