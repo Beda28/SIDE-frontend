@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const Callback = () => {
   const navigate = useNavigate();
-  const [status, setStatus] = useState("로그인 처리 중...");
+  const [status, setStatus] = useState("로그인 처리 중..");
   const hasRequested = useRef(false);
 
   useEffect(() => {
