@@ -22,9 +22,10 @@ const Callback = () => {
       }
 
       try {
-        const res = await axios.post("http://localhost:4184/api/user/login", {
-          code: authorizationCode,
-        });
+        const res = await axios.post("http://localhost:4184/api/user/login", 
+          { code: authorizationCode },
+          { withCredentials: true }
+        );
 
         if (res.data.success) {
           setStatus("로그인 성공!");
