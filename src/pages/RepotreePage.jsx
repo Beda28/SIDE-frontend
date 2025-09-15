@@ -73,9 +73,10 @@ export default function Tree() {
   return (
     <div style={{ padding: 20 }}>
       <h1>Repository: {fullName}</h1>
-      <Link to={`/ide/${fullName}/testfile`}>
+      <Link to={`/ide/${fullName}`}>
         <button>IDE 열기</button>
       </Link>
+      
       <div style={{ marginTop: 20 }}>
         {repoTree.length ? (
           repoTree.map((item) => <TreeItem key={item.path} item={item} />)

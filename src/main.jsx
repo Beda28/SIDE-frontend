@@ -7,7 +7,7 @@ import MainPage from "./pages/MainPage";
 import Callback from "./components/Callback";
 import RepositoryPage from "./pages/RepositoryPage";
 import IDEPage from "./pages/IDEPage";
-import Tree from "./pages/IDEPage copy";
+import Tree from "./pages/RepotreePage";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
