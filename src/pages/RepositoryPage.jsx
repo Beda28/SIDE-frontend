@@ -30,9 +30,9 @@ export default function RepositoryPage() {
       <h1>repo</h1>
       <button onClick={() => setShowModal(true)}>New</button>
       <br /><br />
-      <Link to="/ide/123">
+      {/* <Link to="/ide/123">
         <button>IDE</button>
-      </Link>
+      </Link> */}
 
       <p>{username}</p>
       <div style={{ display: "flex", flexWrap: "wrap"}}>
@@ -42,6 +42,8 @@ export default function RepositoryPage() {
               <p>full_name: {value.full_name}</p>
               <p>owner: {value.owner}</p>
               {value.description ? <p>desc: {value.description}</p> : ""}
+              <div onClick={() => { window.open(`https://github.com/${value.full_name}`) }}>깃허브 바로가기</div>
+              <div onClick={() => { window.location.href = `/ide/${(value.full_name).replace("/", "_")}` }}>ide에서 보기</div>
             </div>  
           </>
         })}
