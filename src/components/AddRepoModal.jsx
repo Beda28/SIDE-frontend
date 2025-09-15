@@ -1,6 +1,22 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 
 export default function AddRepoModal({ onClose }) {
+  const [reponame, setreponame] = useState('');
+  const [desc, setdesc] = useState('');
+  const [priv, setpriv] = useState(false);
+
+  const sendpost = async () => {
+    const reg = /[^a-zA-Z0-9]/
+    if (reg.test(reponame)) return alert("한글 못씀")
+
+    await axios.post('http://localhost:4184/api/repo/createrepo', {
+      name: reponame,
+      desc: desc,
+      priv: priv
+    }, { withCredentials: true })
+  }
+
   return (
     <div style={{
       position: "fixed",
@@ -10,9 +26,13 @@ export default function AddRepoModal({ onClose }) {
     }}>
       <div style={{ background: "white", padding: "20px", borderRadius: "8px", minWidth: "300px" }}>
         <h2>Add Repository</h2>
-        <input type="text" placeholder="Repository Name" style={{ width: "100%", marginBottom: "10px" }} />
+        <input type="text" placeholder="Repository Name" value={reponame} onChange={(e) => {setreponame(e.target.value)}} style={{ width: "100%", marginBottom: "10px" }} />
+        <input type="text" placeholder="Description" value={desc} onChange={(e) => {setdesc(e.target.value)}} style={{ width: "100%", marginBottom: "10px" }} />
+          <p onClick={() => {setpriv(true)}}>Public</p>
+          <p onClick={() => {setpriv(false)}}>Private</p>
         <br />
-        <button onClick={onClose}>Close</button>
+        <button onClick={async () => { await sendpost(); onClose()}}>Create</button> 
+        <button onClick={async () => { onClose()}}>Close</button>
       </div>
     </div>
   );

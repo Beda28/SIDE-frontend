@@ -1,7 +1,7 @@
 export default function LoginButton() {
   const loginWithGithub = () => {
     window.location.assign(
-      "https://github.com/login/oauth/authorize?client_id=Ov23limQZTQt3j86hYyf"
+      "https://github.com/login/oauth/authorize?client_id=Ov23limQZTQt3j86hYyf&scope=repo"
     );
   };
 
