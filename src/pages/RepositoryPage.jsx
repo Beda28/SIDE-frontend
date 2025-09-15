@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AddRepoModal from "../components/AddRepoModal.jsx";
 import axios from "axios";
 
@@ -7,6 +7,7 @@ export default function RepositoryPage() {
   const [showModal, setShowModal] = useState(false);
   const [username, setusername] = useState('');
   const [list, setlist] = useState([]);
+  const navigate = useNavigate();
 
   const getid = async () => {
     const res = await axios.get('http://localhost:4184/api/user/getid', { withCredentials: true })
@@ -43,6 +44,7 @@ export default function RepositoryPage() {
               <p>owner: {value.owner}</p>
               {value.description ? <p>desc: {value.description}</p> : ""}
               <div onClick={() => { window.open(`https://github.com/${value.full_name}`) }}>깃허브 바로가기</div>
+              <div onClick={() => {navigate(`/tree/${value.full_name}`)}}>트리 보러가기</div>
               <div onClick={() => { window.location.href = `/ide/${(value.full_name).replace("/", "_")}` }}>ide에서 보기</div>
             </div>  
           </>
