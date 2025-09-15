@@ -6,38 +6,33 @@ import Terminal from "../components/Terminal";
 import axios from "axios";
 
 export default function IDEPage() {
-  const { id } = useParams(); // id는 "owner_repo" 형태
+  const { id } = useParams();
   const [files, setFiles] = useState([]);
   const [activeFile, setActiveFile] = useState(null);
   const [fileContent, setFileContent] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // 평면 구조 → 트리 구조 변환 함수
   function buildFileTree(files) {
     const root = [];
-
     files.forEach((file) => {
-      const parts = file.name.split("/");
+      const parts = file.name.split("\\");
       let current = root;
-
       parts.forEach((part, idx) => {
         let node = current.find((f) => f.name === part);
-
         if (!node) {
           node = {
             type: idx === parts.length - 1 ? "file" : "folder",
             name: part,
+            path: file.name,
             ...(idx === parts.length - 1 ? { content: file.content } : { children: [] }),
           };
           current.push(node);
         }
-
         if (node.type === "folder") {
           current = node.children;
         }
       });
     });
-
     return root;
   }
 
@@ -45,19 +40,14 @@ export default function IDEPage() {
     const initAndFetchFiles = async () => {
       try {
         await axios.post(`http://localhost:4184/api/ide/init/${id}/python`);
-
         const res = await axios.get(
           `http://localhost:4184/api/ide/getfile?fullname=${id}`
         );
         const fetchedFiles = res.data;
-
-        // 파일 트리 구조로 변환
         const tree = buildFileTree(fetchedFiles);
-
         setFiles(tree);
 
-        // 첫 번째 파일 자동 선택
-        const firstFile = fetchedFiles.find((f) => !f.name.includes("/"));
+        const firstFile = fetchedFiles.find((f) => !f.name.includes("\\"));
         if (firstFile) {
           setActiveFile(firstFile);
           setFileContent(firstFile.content);
@@ -69,7 +59,6 @@ export default function IDEPage() {
         setLoading(false);
       }
     };
-
     initAndFetchFiles();
   }, [id]);
 
@@ -77,10 +66,9 @@ export default function IDEPage() {
 
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif" }}>
-      {/* 왼쪽 사이드 패널 */}
       <div
         style={{
-          width: "220px",
+          width: "350px",
           background: "#1e1e1e",
           color: "white",
           padding: "10px",
@@ -90,14 +78,14 @@ export default function IDEPage() {
         <div className="sidebar">
           <FileTree
             files={files}
-            activeFile={activeFile}
-            setActiveFile={(file) => {
+            onFileSelect={(file) => {
               setActiveFile(file);
               setFileContent(file.content);
             }}
+            activeFile={activeFile}
           />
         </div>
-
+        
         <hr style={{ margin: "10px 0", border: "1px solid #444" }} />
         <h3>Tools</h3>
         <button style={{ display: "block", marginBottom: "5px" }}>Base64</button>
@@ -109,7 +97,6 @@ export default function IDEPage() {
         </Link>
       </div>
 
-      {/* 에디터 + 터미널 */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <div style={{ flex: 1 }}>
           <Editor
