@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import FileTree from "../components/FileTree";
 import Editor from "../components/Editor";
 import Terminal from "../components/Terminal";
 import axios from "axios";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 export default function IDEPage() {
   const { id } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const type = queryParams.get("type") || "python";
   const [files, setFiles] = useState([]);
   const [activeFile, setActiveFile] = useState(null);
   const [fileContent, setFileContent] = useState("");
@@ -39,9 +44,9 @@ export default function IDEPage() {
   useEffect(() => {
     const initAndFetchFiles = async () => {
       try {
-        await axios.post(`http://localhost:4184/api/ide/init/${id}/python`);
+        await axios.post(`${API_BASE}/api/ide/init/${id}/${type}`);
         const res = await axios.get(
-          `http://localhost:4184/api/ide/getfile?fullname=${id}`
+          `${API_BASE}/api/ide/getfile?fullname=${id}`
         );
         const fetchedFiles = res.data;
         const tree = buildFileTree(fetchedFiles);
