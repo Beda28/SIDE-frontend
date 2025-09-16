@@ -67,13 +67,13 @@ export default function IDEPage() {
     initAndFetchFiles();
 
     return () => {
-      (async () => {
+      async () => {
         try {
           await axios.get(`${API_BASE}/api/ide/clear/${id}`);
         } catch (e) {
           console.error("IDE 세션 정리 실패:", e);
         }
-      })();
+      }
     };
   }, [id, type]);
 
