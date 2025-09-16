@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 function buildTree(flatList) {
   const tree = { name: '', children: [] };
   const nodes = { '': tree };
@@ -55,7 +57,7 @@ export default function Tree() {
     const fetchTree = async () => {
       try {
         const res = await axios.post(
-          'http://localhost:4184/api/repo/repotree',
+          `${API_BASE}/api/repo/repotree`,
           { full_name: fullName },
           { withCredentials: true }
         );
