@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 export default function AddRepoModal({ onClose }) {
   const [reponame, setreponame] = useState('');
   const [desc, setdesc] = useState('');
@@ -10,7 +12,7 @@ export default function AddRepoModal({ onClose }) {
     const reg = /[^a-zA-Z0-9]/
     if (reg.test(reponame)) return alert("한글 못씀")
 
-    await axios.post('http://localhost:4184/api/repo/createrepo', {
+    await axios.post(`${API_BASE}/api/repo/createrepo`, {
       name: reponame,
       desc: desc,
       priv: priv

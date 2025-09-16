@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const Callback = () => {
   const navigate = useNavigate();
   const [status, setStatus] = useState("로그인 처리 중..");
@@ -22,7 +24,7 @@ const Callback = () => {
       }
 
       try {
-        const res = await axios.post("http://localhost:4184/api/user/login", 
+        const res = await axios.post(`${API_BASE}/api/user/login`, 
           { code: authorizationCode },
           { withCredentials: true }
         );

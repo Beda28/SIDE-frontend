@@ -3,6 +3,8 @@ import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import "xterm/css/xterm.css";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 export default function TerminalComponent() {
   const terminalRef = useRef();
 
