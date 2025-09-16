@@ -44,8 +44,8 @@ export default function RepositoryPage() {
               <p>owner: {value.owner}</p>
               {value.description ? <p>desc: {value.description}</p> : ""}
               <div onClick={() => { window.open(`https://github.com/${value.full_name}`) }}>깃허브 바로가기</div>
-              <div onClick={() => {navigate(`/tree/${value.full_name}`)}}>트리 보러가기</div>
-              <div onClick={() => { window.location.href = `/ide/${(value.full_name).replace("/", "_")}` }}>ide에서 보기</div>
+              <div onClick={() => { navigate(`/tree/${value.full_name}`) }}>트리 보러가기</div>
+              <div onClick={() => { navigate(`/ide/${(value.full_name).replace("/", "_")}`) }}>ide에서 보기</div>
             </div>  
           </>
         })}
