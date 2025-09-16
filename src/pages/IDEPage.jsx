@@ -66,10 +66,16 @@ export default function IDEPage() {
     };
     initAndFetchFiles();
 
-    return (() => {
-      axios.get(`${API_BASE}/api/ide/clear/${id}`)
-    })
-  }, [id]);
+    return () => {
+      (async () => {
+        try {
+          await axios.get(`${API_BASE}/api/ide/clear/${id}`);
+        } catch (e) {
+          console.error("IDE 세션 정리 실패:", e);
+        }
+      })();
+    };
+  }, [id, type]);
 
   if (loading) return <p>IDE 로딩 중...</p>;
 
