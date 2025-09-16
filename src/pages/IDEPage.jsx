@@ -65,6 +65,10 @@ export default function IDEPage() {
       }
     };
     initAndFetchFiles();
+
+    return (async () => {
+      await axios.get(`${API_BASE}/api/ide/clear/${id}`)
+    })
   }, [id]);
 
   if (loading) return <p>IDE 로딩 중...</p>;
