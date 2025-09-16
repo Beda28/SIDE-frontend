@@ -66,8 +66,8 @@ export default function IDEPage() {
     };
     initAndFetchFiles();
 
-    return (async () => {
-      await axios.get(`${API_BASE}/api/ide/clear/${id}`)
+    return (() => {
+      axios.get(`${API_BASE}/api/ide/clear/${id}`)
     })
   }, [id]);
 
