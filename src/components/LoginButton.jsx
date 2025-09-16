@@ -1,7 +1,9 @@
+const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+
 export default function LoginButton() {
   const loginWithGithub = () => {
     window.location.assign(
-      "https://github.com/login/oauth/authorize?client_id=Ov23limQZTQt3j86hYyf&scope=repo"
+      `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=repo`
     );
   };
 
