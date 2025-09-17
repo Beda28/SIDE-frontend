@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AddRepoModal from "../components/AddRepoModal.jsx";
 import SelectTypeModal from "../components/SelectTypeModal.jsx";
 import axios from "axios";
+import GitHubCalendar from 'react-github-calendar';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -12,6 +13,7 @@ export default function RepositoryPage() {
   const [selectedRepo, setSelectedRepo] = useState(null);
   const [username, setusername] = useState("");
   const [list, setlist] = useState([]);
+  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
   const getid = async () => {
@@ -30,10 +32,22 @@ export default function RepositoryPage() {
     }
   };
 
+  const getprofile = async (username) => {
+    const res = await axios.get(`https://api.github.com/users/${username}`);
+    setUserData(res.data);
+  };
+
+
   useEffect(() => {
     getid();
     getrepo();
   }, []);
+
+  useEffect(() => {
+    if (username) {
+      getprofile(username);
+    }
+  }, [username]);
 
   return (
     <div style={{ padding: "20px" }}>
@@ -42,7 +56,17 @@ export default function RepositoryPage() {
       <br />
       <br />
 
-      <p>{username}</p>
+      <div>
+        {userData && (
+          <>
+            <img src={userData.avatar_url} style={{ width: "250px", height: "250px", borderRadius: "50%" }} />
+            <p>{userData.name}</p>
+            <p>{username}</p>
+            <GitHubCalendar username={username} />
+          </>
+        )}
+      </div>
+      
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {list.map((value, index) => {
           return (
