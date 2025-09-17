@@ -10,7 +10,7 @@ import IDEPage from "./pages/IDEPage";
 import Tree from "./pages/RepotreePage";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  // <StrictMode>
     <Router>
       <Routes>
         <Route path="/" element={<MainPage />} />
@@ -20,5 +20,5 @@ createRoot(document.getElementById("root")).render(
         <Route path="/tree/:owner/:reponame" element={<Tree />} />
       </Routes>
     </Router>
-  </StrictMode>
+  // </StrictMode>
 );
