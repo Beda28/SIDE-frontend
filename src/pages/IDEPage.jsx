@@ -3,6 +3,7 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import FileTree from "../components/FileTree";
 import Editor from "../components/Editor";
 import Terminal from "../components/Terminal";
+import LoadingScreen from "../components/LoadingScreen";
 import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
@@ -12,10 +13,15 @@ export default function IDEPage() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const type = queryParams.get("type") || "python";
+
   const [files, setFiles] = useState([]);
   const [activeFile, setActiveFile] = useState(null);
   const [fileContent, setFileContent] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const [fakeProgress, setFakeProgress] = useState(0);
+  const [apiProgress, setApiProgress] = useState(0);
+  const progress = Math.max(fakeProgress, apiProgress);
 
   function buildFileTree(files) {
     const root = [];
@@ -29,7 +35,9 @@ export default function IDEPage() {
             type: idx === parts.length - 1 ? "file" : "folder",
             name: part,
             path: file.name,
-            ...(idx === parts.length - 1 ? { content: file.content } : { children: [] }),
+            ...(idx === parts.length - 1
+              ? { content: file.content }
+              : { children: [] }),
           };
           current.push(node);
         }
@@ -42,12 +50,28 @@ export default function IDEPage() {
   }
 
   useEffect(() => {
+    const fakeInterval = setInterval(() => {
+      setFakeProgress((prev) => (prev < 90 ? prev + 1 : prev));
+    }, 50);
+
     const initAndFetchFiles = async () => {
       try {
         await axios.post(`${API_BASE}/api/ide/init/${id}/${type}`);
+
         const res = await axios.get(
-          `${API_BASE}/api/ide/getfile?fullname=${id}`
+          `${API_BASE}/api/ide/getfile?fullname=${id}`,
+          {
+            onDownloadProgress: (event) => {
+              if (event.total) {
+                const percent = Math.floor(
+                  (event.loaded / event.total) * 100
+                );
+                setApiProgress(percent);
+              }
+            },
+          }
         );
+
         const fetchedFiles = res.data;
         const tree = buildFileTree(fetchedFiles);
         setFiles(tree);
@@ -61,24 +85,19 @@ export default function IDEPage() {
         console.error("IDE 초기화 실패:", err);
         alert("IDE 초기화 실패. 콘솔 확인.");
       } finally {
-        setLoading(false);
+        clearInterval(fakeInterval);
+        setApiProgress(100);
+        setFakeProgress(100);
+        setTimeout(() => setLoading(false), 500);
       }
     };
+
     initAndFetchFiles();
 
-    return () => {
-      const clear = async () => {
-        try {
-          await axios.get(`${API_BASE}/api/ide/clear/${id}`);
-        } catch (e) {
-          console.error("IDE 세션 정리 실패:", e);
-        }
-      }
-      clear();
-    };
+    return () => clearInterval(fakeInterval);
   }, [id, type]);
 
-  if (loading) return <p>IDE 로딩 중...</p>;
+  if (loading) return <LoadingScreen progress={progress} />;
 
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif" }}>
