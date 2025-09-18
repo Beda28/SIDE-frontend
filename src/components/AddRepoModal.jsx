@@ -9,8 +9,8 @@ export default function AddRepoModal({ onClose }) {
   const [priv, setpriv] = useState(false);
 
   const sendpost = async () => {
-    const reg = /[^a-zA-Z0-9]/
-    if (reg.test(reponame)) return alert("한글 못씀")
+    const reg = /^[A-Za-z0-9._-]{1,100}$/
+    if (!reg.test(reponame)) return alert("한글 못씀")
 
     await axios.post(`${API_BASE}/api/repo/createrepo`, {
       name: reponame,
@@ -30,8 +30,8 @@ export default function AddRepoModal({ onClose }) {
         <h2>Add Repository</h2>
         <input type="text" placeholder="Repository Name" value={reponame} onChange={(e) => {setreponame(e.target.value)}} style={{ width: "100%", marginBottom: "10px" }} />
         <input type="text" placeholder="Description" value={desc} onChange={(e) => {setdesc(e.target.value)}} style={{ width: "100%", marginBottom: "10px" }} />
-          <p onClick={() => {setpriv(true)}}>Public</p>
-          <p onClick={() => {setpriv(false)}}>Private</p>
+          <p onClick={() => {setpriv(false)}}>Public</p>
+          <p onClick={() => {setpriv(true)}}>Private</p>
         <br />
         <button onClick={async () => { await sendpost(); onClose()}}>Create</button> 
         <button onClick={async () => { onClose()}}>Close</button>
