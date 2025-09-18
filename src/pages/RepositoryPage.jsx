@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AddRepoModal from "../components/AddRepoModal.jsx";
 import SelectTypeModal from "../components/SelectTypeModal.jsx";
 import axios from "axios";
-import GitHubCalendar from 'react-github-calendar';
+import GitHubCalendar from "react-github-calendar";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -36,7 +36,6 @@ export default function RepositoryPage() {
     const res = await axios.get(`https://api.github.com/users/${username}`);
     setUserData(res.data);
   };
-
 
   useEffect(() => {
     getid();
