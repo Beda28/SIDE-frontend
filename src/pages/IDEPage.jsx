@@ -94,7 +94,18 @@ export default function IDEPage() {
 
     initAndFetchFiles();
 
-    return () => clearInterval(fakeInterval);
+    return () => {
+      const clear = async () => {
+        try {
+          await axios.get(`${API_BASE}/api/ide/clear/${id}`);
+        } catch (e) {
+          console.error("IDE 세션 정리 실패:", e);
+        }
+      };
+
+      clear();
+      clearInterval(fakeInterval);
+    };
   }, [id, type]);
 
   if (loading) return <LoadingScreen progress={progress} />;
