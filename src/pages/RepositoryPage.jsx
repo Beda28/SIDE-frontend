@@ -20,7 +20,11 @@ export default function RepositoryPage() {
     const res = await axios.get(`${API_BASE}/api/user/getid`, {
       withCredentials: true,
     });
-    setusername(res.data);
+    if (res.data) 
+      setusername(res.data);
+    else {
+      alert("로그인 해주세요"); navigate('/')
+    }
   };
 
   const getrepo = async () => {
@@ -48,6 +52,31 @@ export default function RepositoryPage() {
     }
   }, [username]);
 
+  const selectLastHalfYear = (contributions) => {
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
+    const shownMonths = 6;
+
+    return contributions.filter((day) => {
+      const date = new Date(day.date);
+      const monthOfDay = date.getMonth();
+
+      if (currentMonth >= 5) {
+        return (
+          date.getFullYear() === currentYear &&
+          monthOfDay > currentMonth - shownMonths &&
+          monthOfDay <= currentMonth
+        );
+      }
+
+      return (
+        (date.getFullYear() === currentYear && monthOfDay <= currentMonth) ||
+        (date.getFullYear() === currentYear - 1 &&
+          monthOfDay > currentMonth + 11 - shownMonths)
+      );
+    });
+  };
+
   return (
     <div style={{ padding: "20px" }}>
       <h1>repo</h1>
@@ -58,20 +87,34 @@ export default function RepositoryPage() {
       <div>
         {userData && (
           <>
-            <img src={userData.avatar_url} style={{ width: "250px", height: "250px", borderRadius: "50%" }} />
+            <img
+              src={userData.avatar_url}
+              style={{
+                width: "250px",
+                height: "250px",
+                borderRadius: "50%",
+              }}
+            />
             <p>{userData.name}</p>
             <p>{username}</p>
-            <GitHubCalendar username={username} />
+            <GitHubCalendar
+              username={username}
+              transformData={selectLastHalfYear}
+            />
           </>
         )}
       </div>
-      
+
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {list.map((value, index) => {
           return (
             <div
               key={index}
-              style={{ margin: "30px", border: "1px solid black", padding: "10px" }}
+              style={{
+                margin: "30px",
+                border: "1px solid black",
+                padding: "10px",
+              }}
             >
               <p>full_name: {value.full_name}</p>
               <p>owner: {value.owner}</p>
