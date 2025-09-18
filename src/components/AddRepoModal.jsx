@@ -12,11 +12,14 @@ export default function AddRepoModal({ onClose }) {
     const reg = /^[A-Za-z0-9._-]{1,100}$/
     if (!reg.test(reponame)) return alert("한글 못씀")
 
-    await axios.post(`${API_BASE}/api/repo/createrepo`, {
+    const res = await axios.post(`${API_BASE}/api/repo/createrepo`, {
       name: reponame,
       desc: desc,
       priv: priv
     }, { withCredentials: true })
+
+    if (res.data.message) onClose();
+    else alert("서버오류")
   }
 
   return (
@@ -33,7 +36,7 @@ export default function AddRepoModal({ onClose }) {
           <p onClick={() => {setpriv(false)}}>Public</p>
           <p onClick={() => {setpriv(true)}}>Private</p>
         <br />
-        <button onClick={async () => { await sendpost(); onClose()}}>Create</button> 
+        <button onClick={async () => { await sendpost();}}>Create</button> 
         <button onClick={async () => { onClose()}}>Close</button>
       </div>
     </div>

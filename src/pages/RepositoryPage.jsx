@@ -16,6 +16,10 @@ export default function RepositoryPage() {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!showModal) getrepo()
+  }, [showModal])
+
   const getid = async () => {
     const res = await axios.get(`${API_BASE}/api/user/getid`, {
       withCredentials: true,
@@ -43,7 +47,7 @@ export default function RepositoryPage() {
 
   useEffect(() => {
     getid();
-    getrepo();
+    // getrepo();
   }, []);
 
   useEffect(() => {
