@@ -4,8 +4,8 @@ import React, { useState } from "react";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function AddRepoModal({ onClose }) {
-  const [reponame, setreponame] = useState('');
-  const [desc, setdesc] = useState('');
+  const [reponame, setreponame] = useState("");
+  const [desc, setdesc] = useState("");
   const [priv, setpriv] = useState(false);
 
   const sendpost = async () => {

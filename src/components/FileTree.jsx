@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const FileTreeNode = ({ node, onFileSelect, level = 0, activeFile }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const isDirectory = node.type === 'folder';
+  const isDirectory = node.type === "folder";
 
   const isSelected = activeFile && node.name === activeFile.name;
 
@@ -15,18 +15,18 @@ const FileTreeNode = ({ node, onFileSelect, level = 0, activeFile }) => {
   };
 
   const nodeStyle = {
-    cursor: 'pointer',
-    margin: '3px 0',
-    color: isDirectory ? '#ccc' : '#fff',
-    backgroundColor: isSelected ? '#333' : 'transparent',
+    cursor: "pointer",
+    margin: "3px 0",
+    color: isDirectory ? "#ccc" : "#fff",
+    backgroundColor: isSelected ? "#333" : "transparent",
     paddingLeft: `${level * 15}px`,
   };
 
   return (
     <div>
       <p onClick={handleClick} style={nodeStyle}>
-        {isDirectory ? (isExpanded ? '▼ ' : '▶ ') : ''}
-        {isDirectory ? '📁 ' : '📄 '}
+        {isDirectory ? (isExpanded ? "▼ " : "▶ ") : ""}
+        {isDirectory ? "📁 " : "📄 "}
         {node.name}
       </p>
       {isExpanded && isDirectory && node.children && (

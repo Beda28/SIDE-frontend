@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams, Link } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function buildTree(flatList) {
-  const tree = { name: '', children: [] };
-  const nodes = { '': tree };
+  const tree = { name: "", children: [] };
+  const nodes = { "": tree };
   for (const item of flatList) {
-    const pathParts = item.path.split('/');
+    const pathParts = item.path.split("/");
     let currentNode = tree;
     for (let i = 0; i < pathParts.length; i++) {
       const part = pathParts[i];
-      const currentPath = pathParts.slice(0, i + 1).join('/');
+      const currentPath = pathParts.slice(0, i + 1).join("/");
       if (!nodes[currentPath]) {
         const newNode = {
           name: part,
           type: item.type,
           path: currentPath,
-          children: item.type === 'tree' ? [] : undefined,
+          children: item.type === "tree" ? [] : undefined,
         };
         currentNode.children.push(newNode);
         nodes[currentPath] = newNode;
@@ -30,15 +30,15 @@ function buildTree(flatList) {
 }
 
 const TreeItem = ({ item }) => {
-  const isDirectory = item.type === 'tree';
+  const isDirectory = item.type === "tree";
   return (
-    <div style={{ marginLeft: '15px' }}>
-      <p style={{ margin: 0, padding: 5, backgroundColor: isDirectory ? '#f0f0f0' : 'transparent' }}>
-        {isDirectory ? '📁 ' : '📄 '}
+    <div style={{ marginLeft: "15px" }}>
+      <p style={{ margin: 0, padding: 5, backgroundColor: isDirectory ? "#f0f0f0" : "transparent" }}>
+        {isDirectory ? "📁 " : "📄 "}
         {item.name}
       </p>
       {isDirectory && item.children && (
-        <div style={{ marginLeft: '10px' }}>
+        <div style={{ marginLeft: "10px" }}>
           {item.children.map((child) => (
             <TreeItem key={child.path} item={child} />
           ))}
@@ -66,7 +66,7 @@ export default function Tree() {
           setRepoTree(nestedTree);
         }
       } catch (error) {
-        console.error('Failed to fetch tree:', error);
+        console.error("Failed to fetch tree:", error);
       }
     };
     fetchTree();

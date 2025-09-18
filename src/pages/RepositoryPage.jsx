@@ -28,7 +28,7 @@ export default function RepositoryPage() {
       setusername(res.data);
     else {
       alert("로그인 해주세요"); 
-      navigate('/');
+      navigate("/");
     }
   };
 
