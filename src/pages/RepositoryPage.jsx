@@ -101,6 +101,7 @@ export default function RepositoryPage() {
               username={username}
               transformData={selectLastHalfYear}
             />
+            <p>total: {list.length}</p>
           </>
         )}
       </div>
