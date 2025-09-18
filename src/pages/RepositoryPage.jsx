@@ -17,8 +17,8 @@ export default function RepositoryPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!showModal) getrepo()
-  }, [showModal])
+    if (!showModal) getrepo();
+  }, [showModal]);
 
   const getid = async () => {
     const res = await axios.get(`${API_BASE}/api/user/getid`, {
@@ -27,7 +27,8 @@ export default function RepositoryPage() {
     if (res.data) 
       setusername(res.data);
     else {
-      alert("로그인 해주세요"); navigate('/')
+      alert("로그인 해주세요"); 
+      navigate('/');
     }
   };
 
@@ -59,7 +60,7 @@ export default function RepositoryPage() {
   const selectLastHalfYear = (contributions) => {
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth();
-    const shownMonths = 6;
+    const shownMonths = 5;
 
     return contributions.filter((day) => {
       const date = new Date(day.date);
