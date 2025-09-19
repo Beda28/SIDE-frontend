@@ -37,7 +37,8 @@ const FileTree = ({ files, onFileSelect, activeFile, onAdd, onDelete, repoId }) 
 
   return (
     <div>
-      <div style={{ marginBottom: "10px" }}>
+      <div style={{ padding: "10px" }}>
+        <h3>FileTree</h3>
         <button onClick={() => onAdd(activeFile ? activeFile : null, "file")}>+ New File</button>
         <button onClick={() => onAdd(activeFile ? activeFile : null, "folder")}>+ New Folder</button>
         <button onClick={handleDelete} disabled={!activeFile}>Delete</button>

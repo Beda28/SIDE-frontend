@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import FileTree from "../components/FileTree";
+import ToolsPanel from "../components/ToolsPanel";
+import GitPanel from "../components/GitPanel";
 import Editor from "../components/Editor";
 import Terminal from "../components/Terminal";
 import LoadingScreen from "../components/LoadingScreen";
@@ -18,6 +20,7 @@ const IDEPage = () => {
   const [activeFile, setActiveFile] = useState(null);
   const [fileContent, setFileContent] = useState("");
   const [loading, setLoading] = useState(true);
+  const [activePanel, setActivePanel] = useState("files");
 
   const [fakeProgress, setFakeProgress] = useState(0);
   const [apiProgress, setApiProgress] = useState(0);
@@ -182,14 +185,28 @@ const IDEPage = () => {
     <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif" }}>
       <div
         style={{
-          width: "350px",
+          width: "50px",
+          background: "#252526",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          paddingTop: "10px",
+        }}
+      >
+        <button onClick={() => setActivePanel("files")} title="Files">📁</button>
+        <button onClick={() => setActivePanel("tools")} title="Tools">🛠</button>
+        <button onClick={() => setActivePanel("git")} title="Git">🌿</button>
+      </div>
+
+      <div
+        style={{
+          width: "300px",
           background: "#1e1e1e",
           color: "white",
-          padding: "10px",
           overflowY: "auto",
         }}
       >
-        <div className="sidebar">
+        {activePanel === "files" && (
           <FileTree
             files={files}
             onFileSelect={(file) => {
@@ -201,17 +218,9 @@ const IDEPage = () => {
             onDelete={handleDelete}
             repoId={id}
           />
-        </div>
-
-        <hr style={{ margin: "10px 0", border: "1px solid #444" }} />
-        <h3>Tools</h3>
-        <button style={{ display: "block", marginBottom: "5px" }}>Base64</button>
-        <button style={{ display: "block", marginBottom: "5px" }}>Hash</button>
-        <button style={{ display: "block", marginBottom: "5px" }}>Search</button>
-        <br />
-        <Link to="/repositories">
-          <button style={{ marginTop: "10px" }}>Back</button>
-        </Link>
+        )}
+        {activePanel === "tools" && <ToolsPanel />}
+        {activePanel === "git" && <GitPanel />}
       </div>
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -235,6 +244,6 @@ const IDEPage = () => {
       </div>
     </div>
   );
-}
+};
 
 export default IDEPage;
