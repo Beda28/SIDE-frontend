@@ -11,8 +11,7 @@ export default function FileTree({ files, onFileSelect, activeFile, onAdd, onDel
     if (!confirmDelete) return;
 
     try {
-      console.log(repoId, activeFile.path)
-      await axios.post(`${API_BASE}/api/ide/delete`, {
+      await axios.post(`${API_BASE}/api/ide/deletefile`, {
         fullname: repoId,
         path: activeFile.path,
       });
