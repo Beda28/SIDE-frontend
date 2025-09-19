@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
+import { FaFileAlt, FaTools, FaCodeBranch } from "react-icons/fa";
 import FileTree from "../components/FileTree";
 import ToolsPanel from "../components/ToolsPanel";
 import GitPanel from "../components/GitPanel";
@@ -183,6 +184,7 @@ const IDEPage = () => {
 
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif" }}>
+      {/* 아이콘 바 */}
       <div
         style={{
           width: "50px",
@@ -193,11 +195,53 @@ const IDEPage = () => {
           paddingTop: "10px",
         }}
       >
-        <button onClick={() => setActivePanel("files")} title="Files">📁</button>
-        <button onClick={() => setActivePanel("tools")} title="Tools">🛠</button>
-        <button onClick={() => setActivePanel("git")} title="Git">🌿</button>
+        <button
+          onClick={() => setActivePanel("files")}
+          style={{
+            marginBottom: "10px",
+            color: activePanel === "files" ? "#fff" : "#888",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "24px",
+          }}
+          title="Files"
+        >
+          <FaFileAlt />
+        </button>
+
+        <button
+          onClick={() => setActivePanel("tools")}
+          style={{
+            marginBottom: "10px",
+            color: activePanel === "tools" ? "#fff" : "#888",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "24px",
+          }}
+          title="Tools"
+        >
+          <FaTools />
+        </button>
+
+        <button
+          onClick={() => setActivePanel("git")}
+          style={{
+            marginBottom: "10px",
+            color: activePanel === "git" ? "#fff" : "#888",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "24px",
+          }}
+          title="Git"
+        >
+          <FaCodeBranch />
+        </button>
       </div>
 
+      {/* 패널 */}
       <div
         style={{
           width: "300px",
@@ -223,6 +267,7 @@ const IDEPage = () => {
         {activePanel === "git" && <GitPanel />}
       </div>
 
+      {/* 에디터 & 터미널 */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <div style={{ flex: 1 }}>
           <Editor
