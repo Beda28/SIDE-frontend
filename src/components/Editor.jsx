@@ -1,7 +1,7 @@
 import React from "react";
 import Editor from "@monaco-editor/react";
 
-function getLanguageFromExtension(filename = "") {
+const getLanguageFromExtension = (filename = "") => {
   const ext = filename.split(".").pop().toLowerCase();
 
   switch (ext) {
@@ -41,7 +41,7 @@ function getLanguageFromExtension(filename = "") {
   }
 }
 
-export default function CodeEditor({ file, content, setContent }) {
+const CodeEditor = ({ file, content, setContent }) => {
   const language = file ? getLanguageFromExtension(file.name) : "plaintext";
 
   return (
@@ -54,3 +54,5 @@ export default function CodeEditor({ file, content, setContent }) {
     />
   );
 }
+
+export default CodeEditor;

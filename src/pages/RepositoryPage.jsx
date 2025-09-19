@@ -7,7 +7,7 @@ import GitHubCalendar from "react-github-calendar";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-export default function RepositoryPage() {
+const RepositoryPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [showTypeModal, setShowTypeModal] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState(null);
@@ -160,3 +160,5 @@ export default function RepositoryPage() {
     </div>
   );
 }
+
+export default RepositoryPage;

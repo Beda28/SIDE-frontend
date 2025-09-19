@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function SelectTypeModal({ onClose, onSelect }) {
+const SelectTypeModal = ({ onClose, onSelect }) => {
   return (
     <div
       style={{
@@ -43,3 +43,5 @@ export default function SelectTypeModal({ onClose, onSelect }) {
     </div>
   );
 }
+
+export default SelectTypeModal;

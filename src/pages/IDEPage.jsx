@@ -8,7 +8,7 @@ import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-export default function IDEPage() {
+const IDEPage = () => {
   const { id } = useParams();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -236,3 +236,5 @@ export default function IDEPage() {
     </div>
   );
 }
+
+export default IDEPage;

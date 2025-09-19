@@ -4,7 +4,7 @@ import { useParams, Link } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-function buildTree(flatList) {
+const buildTree = (flatList) => {
   const tree = { name: "", children: [] };
   const nodes = { "": tree };
   for (const item of flatList) {
@@ -48,7 +48,7 @@ const TreeItem = ({ item }) => {
   );
 };
 
-export default function Tree() {
+const Tree = () => {
   const { owner, reponame } = useParams();
   const [repoTree, setRepoTree] = useState([]);
   const fullName = `${owner}/${reponame}`;
@@ -89,3 +89,5 @@ export default function Tree() {
     </div>
   );
 }
+
+export default Tree;

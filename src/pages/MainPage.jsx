@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import LoginButton from "../components/LoginButton";
 
-export default function MainPage() {
+const MainPage = () => {
   const navigate = useNavigate();
 
   return (
@@ -42,3 +42,5 @@ const styles = {
     transition: "all 0.2s ease-in-out",
   },
 };
+
+export default MainPage;

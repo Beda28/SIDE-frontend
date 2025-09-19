@@ -5,7 +5,7 @@ import { useState } from "react";
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-export default function LoginButton() {
+const LoginButton = () => {
   const [login, setlogin] = useState()
 
   useEffect(() => {
@@ -41,6 +41,7 @@ export default function LoginButton() {
   </>
 }
 
+
 const styles = {
   button: {
     padding: "10px 20px",
@@ -52,3 +53,5 @@ const styles = {
     transition: "all 0.2s ease-in-out",
   },
 };
+
+export default LoginButton;

@@ -5,7 +5,7 @@ import "xterm/css/xterm.css";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-export default function TerminalComponent() {
+const TerminalComponent = () => {
   const terminalRef = useRef();
 
   useEffect(() => {
@@ -29,3 +29,5 @@ export default function TerminalComponent() {
 
   return <div ref={terminalRef} style={{ width: "100%", height: "100%" }} />;
 }
+
+export default TerminalComponent;
