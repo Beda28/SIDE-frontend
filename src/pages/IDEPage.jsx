@@ -23,24 +23,26 @@ export default function IDEPage() {
   const [apiProgress, setApiProgress] = useState(0);
   const progress = Math.max(fakeProgress, apiProgress);
 
-  function buildFileTree(files) {
+  const buildFileTree = (files) => {
     const root = [];
     files.forEach((file) => {
       const parts = file.name.split("\\");
       let current = root;
+
       parts.forEach((part, idx) => {
         let node = current.find((f) => f.name === part);
+        const isFile = idx === parts.length - 1 && file.content !== null;
+
         if (!node) {
           node = {
-            type: idx === parts.length - 1 ? "file" : "folder",
+            type: isFile ? "file" : "folder",
             name: part,
-            path: file.name,
-            ...(idx === parts.length - 1
-              ? { content: file.content }
-              : { children: [] }),
+            path: parts.slice(0, idx + 1).join("\\"),
+            ...(isFile ? { content: file.content } : { children: [] }),
           };
           current.push(node);
         }
+
         if (node.type === "folder") {
           current = node.children;
         }
@@ -48,6 +50,72 @@ export default function IDEPage() {
     });
     return root;
   }
+
+  const handleAdd = async (parentNode, type) => {
+    const name = prompt(`새 ${type} 이름을 입력하세요:`);
+    if (!name) return;
+
+    let parentPath = "";
+    if (parentNode) {
+      if (parentNode.type === "file") {
+        const parts = parentNode.path.split("\\");
+        parts.pop();
+        parentPath = parts.join("\\");
+      } else if (parentNode.type === "folder") {
+        parentPath = parentNode.path;
+      }
+    }
+
+    const newPath = parentPath ? `${parentPath}\\${name}` : name;
+
+    try {
+      await axios.post(`${API_BASE}/api/ide/addfile`, {
+        fullname: id,
+        path: newPath,
+        type, 
+      });
+
+      setFiles((prev) => {
+        const addRecursive = (nodes) =>
+          nodes.map((n) => {
+            if (n.type === "folder" && n.path === parentPath) {
+              const newNode =
+                type === "file"
+                  ? { type: "file", name, path: newPath, content: "" }
+                  : { type: "folder", name, path: newPath, children: [] };
+              return { ...n, children: [...n.children, newNode] };
+            } else if (n.type === "folder") {
+              return { ...n, children: addRecursive(n.children) };
+            }
+            return n;
+          });
+
+        if (!parentPath) {
+          const newNode =
+            type === "file"
+              ? { type: "file", name, path: newPath, content: "" }
+              : { type: "folder", name, path: newPath, children: [] };
+          return [...prev, newNode];
+        }
+        return addRecursive(prev);
+      });
+    } catch (err) {
+      console.error("파일/폴더 추가 실패:", err);
+      alert("파일/폴더 추가 실패");
+    }
+  };
+
+  const handleDelete = (path) => {
+    const removeRecursive = (nodes) =>
+      nodes
+        .filter((n) => n.path !== path)
+        .map((n) =>
+          n.type === "folder" ? { ...n, children: removeRecursive(n.children) } : n
+        );
+
+    setFiles((prev) => removeRecursive(prev));
+    setActiveFile(null);
+  };
 
   useEffect(() => {
     const fakeInterval = setInterval(() => {
@@ -129,9 +197,12 @@ export default function IDEPage() {
               setFileContent(file.content);
             }}
             activeFile={activeFile}
+            onAdd={handleAdd}
+            onDelete={handleDelete}
+            repoId={id}
           />
         </div>
-        
+
         <hr style={{ margin: "10px 0", border: "1px solid #444" }} />
         <h3>Tools</h3>
         <button style={{ display: "block", marginBottom: "5px" }}>Base64</button>
