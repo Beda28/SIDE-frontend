@@ -24,17 +24,6 @@ const FileTree = ({ files, onFileSelect, activeFile, onAdd, onDelete, repoId }) 
     }
   };
 
-  if (!files || files.length === 0) {
-    return (
-      <div>
-        <p>파일이 없습니다.</p>
-        <button onClick={() => onAdd(null, "file")}>+ Root File</button>
-        <button onClick={() => onAdd(null, "folder")}>+ Root Folder</button>
-        <button onClick={handleDelete} disabled={!activeFile}>Delete</button>
-      </div>
-    );
-  }
-
   return (
     <div>
       <div style={{ padding: "10px" }}>
