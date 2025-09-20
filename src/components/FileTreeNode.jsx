@@ -6,7 +6,7 @@ const FileTreeNode = ({ node, onFileSelect, level = 0, activeFile, onAdd }) => {
 
   const isSelected = activeFile && node.path === activeFile.path;
 
-  const handleClick = () => {
+  const Click = () => {
     if (isDirectory) {
         setIsExpanded(!isExpanded);
         onFileSelect(node);
@@ -25,7 +25,7 @@ const FileTreeNode = ({ node, onFileSelect, level = 0, activeFile, onAdd }) => {
 
   return (
     <div>
-      <p onClick={handleClick} style={nodeStyle}>
+      <p onClick={Click} style={nodeStyle}>
         {isDirectory ? (isExpanded ? "▼ " : "▶ ") : ""}
         {isDirectory ? "📁 " : "📄 "}
         {node.name}

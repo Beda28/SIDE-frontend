@@ -55,7 +55,7 @@ const IDEPage = () => {
     return root;
   }
 
-  const handleAdd = async (parentNode, type) => {
+  const Add = async (parentNode, type) => {
     const name = prompt(`새 ${type} 이름을 입력하세요:`);
     if (!name) return;
 
@@ -109,7 +109,7 @@ const IDEPage = () => {
     }
   };
 
-  const handleDelete = (path) => {
+  const Delete = (path) => {
     const removeRecursive = (nodes) =>
       nodes
         .filter((n) => n.path !== path)
@@ -258,13 +258,13 @@ const IDEPage = () => {
               setFileContent(file.content);
             }}
             activeFile={activeFile}
-            onAdd={handleAdd}
-            onDelete={handleDelete}
+            onAdd={Add}
+            onDelete={Delete}
             repoId={id}
           />
         )}
         {activePanel === "tools" && <ToolsPanel />}
-        {activePanel === "git" && <GitPanel />}
+        {activePanel === "git" && <GitPanel repoId={id} />}
       </div>
 
       {/* 에디터 & 터미널 */}
