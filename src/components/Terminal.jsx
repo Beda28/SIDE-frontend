@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { Terminal } from "xterm";
+import { useParams } from "react-router-dom"
 import { FitAddon } from "xterm-addon-fit";
 import "xterm/css/xterm.css";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
-
 const TerminalComponent = () => {
+  const { id } = useParams();
   const terminalRef = useRef();
 
   useEffect(() => {
@@ -17,12 +17,12 @@ const TerminalComponent = () => {
     fitAddon.fit();
 
     // 샘플 출력
-    term.writeln("test");
+    // term.writeln("test");
 
     // WebSocket 연결 
-    // const socket = new WebSocket("ws://localhost:8000/ws/terminal/1234");
-    // term.onData((data) => socket.send(data));
-    // socket.onmessage = (event) => term.write(event.data);
+    const socket = new WebSocket(`ws://localhost:4184/api/ide/terminal/${id}`);
+    socket.onmessage = (event) => {term.write(event.data); console.log(event.data)};
+    // term.onData((data) => socket.send(data));  // 터미널 제작시 사용
 
     return () => term.dispose();
   }, []);

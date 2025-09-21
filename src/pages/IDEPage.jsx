@@ -121,6 +121,11 @@ const IDEPage = () => {
     setActiveFile(null);
   };
 
+  const Start = async () => {
+    await axios.post(`${API_BASE}/api/ide/start/${id}`)
+    // 포트반환. 포트가지고 실행시킨거 띄우거나 하는 로직 추가하기
+  }
+
   useEffect(() => {
     const fakeInterval = setInterval(() => {
       setFakeProgress((prev) => (prev < 90 ? prev + 1 : prev));
@@ -263,6 +268,7 @@ const IDEPage = () => {
         >
           <FaCodeBranch />
         </button>
+        <button onClick={Start}>시작</button>
       </div>
 
       {/* 패널 */}
