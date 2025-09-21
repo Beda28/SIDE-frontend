@@ -180,6 +180,30 @@ const IDEPage = () => {
     };
   }, [id, type]);
 
+  useEffect(() => {
+    const SaveFile = async (e) => {
+      if (e.ctrlKey && e.key === "s") {
+        e.preventDefault();
+
+        if (!activeFile) return;
+
+        try {
+          await axios.post(`${API_BASE}/api/ide/savefile`, {
+            fullname: id,
+            path: activeFile.path,
+            content: fileContent,
+          });
+        } catch (err) {
+          console.error("파일 저장 실패:", err);
+          alert("파일 저장 실패");
+        }
+      }
+    };
+
+    window.addEventListener("keydown", SaveFile);
+    return () => window.removeEventListener("keydown", SaveFile);
+  }, [activeFile, fileContent, id]);
+
   if (loading) return <LoadingScreen progress={progress} />;
 
   return (
