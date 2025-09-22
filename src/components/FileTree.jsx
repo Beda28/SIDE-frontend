@@ -4,7 +4,7 @@ import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
-const FileTree = ({ files, onFileSelect, activeFile, onAdd, onDelete, repoId }) => {
+const FileTree = ({ files, onFileSelect, activeFile, onAdd, onDelete, onRename, repoId }) => {
   const Delete = async () => {
     if (!activeFile) return alert("삭제할 파일/폴더를 선택하세요.");
     const confirmDelete = window.confirm(`정말 "${activeFile.name}"을(를) 삭제하시겠습니까?`);
@@ -24,6 +24,31 @@ const FileTree = ({ files, onFileSelect, activeFile, onAdd, onDelete, repoId }) 
     }
   };
 
+  const Rename = async () => {
+    if (!activeFile) return alert("이름을 변경할 파일/폴더를 선택하세요.");
+    const newName = prompt(`"${activeFile.name}"의 새 이름을 입력하세요:`, activeFile.name);
+    if (!newName || newName === activeFile.name) return;
+
+    try {
+      const oldPath = activeFile.path;
+      const pathParts = oldPath.split("/");
+      pathParts[pathParts.length - 1] = newName;
+      const newPath = pathParts.join("/");
+
+      await axios.post(`${API_BASE}/api/ide/renamefile`, {
+        fullname: repoId,
+        old_path: oldPath,
+        new_path: newPath,
+      });
+
+      onRename(oldPath, newPath);
+      alert(`"${activeFile.name}" → "${newName}" 이름 변경 성공`);
+    } catch (err) {
+      console.error("이름 변경 실패:", err);
+      alert("이름 변경 실패");
+    }
+  };
+
   return (
     <div>
       <div style={{ padding: "10px" }}>
@@ -31,6 +56,7 @@ const FileTree = ({ files, onFileSelect, activeFile, onAdd, onDelete, repoId }) 
         <button onClick={() => onAdd(activeFile ? activeFile : null, "file")}>+ New File</button>
         <button onClick={() => onAdd(activeFile ? activeFile : null, "folder")}>+ New Folder</button>
         <button onClick={Delete} disabled={!activeFile}>Delete</button>
+        <button onClick={Rename} disabled={!activeFile}>Rename</button>
       </div>
 
       {files.map((file) => (
@@ -43,6 +69,6 @@ const FileTree = ({ files, onFileSelect, activeFile, onAdd, onDelete, repoId }) 
       ))}
     </div>
   );
-}
+};
 
 export default FileTree;

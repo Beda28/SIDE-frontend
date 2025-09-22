@@ -121,6 +121,14 @@ const IDEPage = () => {
     setActiveFile(null);
   };
 
+  const Rename = (oldPath, newPath) => {
+    setFiles(prev =>
+      prev.map(file =>
+        file.path === oldPath ? { ...file, path: newPath, name: newPath.split("/").pop() } : file
+      )
+    );
+  };
+
   const Start = async () => {
     await axios.post(`${API_BASE}/api/ide/start/${id}`)
     // 포트반환. 포트가지고 실행시킨거 띄우거나 하는 로직 추가하기
@@ -290,6 +298,7 @@ const IDEPage = () => {
             activeFile={activeFile}
             onAdd={Add}
             onDelete={Delete}
+            onRename={Rename}
             repoId={id}
           />
         )}
