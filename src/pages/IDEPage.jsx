@@ -28,6 +28,8 @@ const IDEPage = () => {
   const [apiProgress, setApiProgress] = useState(0);
   const progress = Math.max(fakeProgress, apiProgress);
 
+  const [start, setstart] = useState(false);
+
   const buildFileTree = (files) => {
     const root = [];
     files.forEach((file) => {
@@ -155,7 +157,8 @@ const IDEPage = () => {
   };
 
   const Start = async () => {
-    await axios.post(`${API_BASE}/api/ide/start/${id}`)
+    const res = await axios.post(`${API_BASE}/api/test/start/${id}`)
+    if (res.data.message) {if (!start) setstart(true)}
     // 포트반환. 포트가지고 실행시킨거 띄우거나 하는 로직 추가하기
   }
 
@@ -304,6 +307,7 @@ const IDEPage = () => {
         >
           <FaCodeBranch />
         </button>
+        <button onClick={Start}>시작</button>
       </div>
 
       {/* 패널 */}
@@ -394,7 +398,7 @@ const IDEPage = () => {
 
         {/* 터미널 */}
         <div style={{ height: "150px" }}>
-          <Terminal />
+          <Terminal start={start} />
         </div>
       </div>
     </div>
