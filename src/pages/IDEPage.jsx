@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import { FaFileAlt, FaTools, FaCodeBranch } from "react-icons/fa";
 import FileTree from "../components/FileTree";
 import ToolsPanel from "../components/ToolsPanel";
@@ -29,6 +29,7 @@ const IDEPage = () => {
   const progress = Math.max(fakeProgress, apiProgress);
 
   const [start, setstart] = useState(false);
+  const navigate = useNavigate();
 
   const buildFileTree = (files) => {
     const root = [];
@@ -157,9 +158,18 @@ const IDEPage = () => {
   };
 
   const Start = async () => {
-    const res = await axios.post(`${API_BASE}/api/test/start/${id}`)
+    const res = await axios.post(`${API_BASE}/api/test/start/${id}`);
     if (res.data.message) {if (!start) setstart(true)}
     // 포트반환. 포트가지고 실행시킨거 띄우거나 하는 로직 추가하기
+  }
+  
+  const Clear = async () => {
+    try {
+      await axios.get(`${API_BASE}/api/ide/clear/${id}`);
+      navigate(-1);
+    } catch (e) {
+      console.error("IDE 세션 정리 실패:", e);
+    }
   }
 
   useEffect(() => {
@@ -208,15 +218,6 @@ const IDEPage = () => {
     initAndFetchFiles();
 
     return () => {
-      const clear = async () => {
-        try {
-          await axios.get(`${API_BASE}/api/ide/clear/${id}`);
-        } catch (e) {
-          console.error("IDE 세션 정리 실패:", e);
-        }
-      };
-
-      clear();
       clearInterval(fakeInterval);
     };
   }, [id, type]);
@@ -308,6 +309,7 @@ const IDEPage = () => {
           <FaCodeBranch />
         </button>
         <button onClick={Start}>시작</button>
+        <button onClick={Clear}>삭제</button>
       </div>
 
       {/* 패널 */}

@@ -12,7 +12,7 @@ const TerminalComponent = (start) => {
   useEffect(() => {
     if (start.start){
       const socket = new WebSocket(`ws://localhost:4184/api/ws/terminal/${id}`);
-      socket.onmessage = (event) => term.write(event.data);
+      socket.onmessage = (event) => {term.writeln(event.data); console.log(event.data)};
     }
   }, [start])
 
