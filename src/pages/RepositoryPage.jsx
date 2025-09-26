@@ -124,6 +124,7 @@ const RepositoryPage = () => {
             >
               <p>full_name: {value.full_name}</p>
               <p>owner: {value.owner}</p>
+              <p>priv: {value.private ? "private":"public"}</p>
               {value.description ? <p>desc: {value.description}</p> : ""}
               <div
                 onClick={() =>
@@ -131,9 +132,6 @@ const RepositoryPage = () => {
                 }
               >
                 깃허브 바로가기
-              </div>
-              <div onClick={() => navigate(`/tree/${value.full_name}`)}>
-                트리 보러가기
               </div>
               <div
                 onClick={() => {
