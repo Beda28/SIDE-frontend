@@ -31,6 +31,14 @@ const IDEPage = () => {
   const [start, setstart] = useState(false);
   const navigate = useNavigate();
 
+  const truncateFileName = (fileName) => {
+    const maxLength = 12;
+    if (fileName.length > maxLength) {
+      return `${fileName.substring(0, maxLength)}...`;
+    }
+    return fileName;
+  };
+
   const buildFileTree = (files) => {
     const root = [];
     files.forEach((file) => {
@@ -163,7 +171,7 @@ const IDEPage = () => {
   const Clear = async () => {
     try {
       await axios.get(`${API_BASE}/api/ide/clear/${id}`);
-      navigate(-1);
+      navigate("repositories");
     } catch (e) {
       console.error("IDE 세션 정리 실패:", e);
     }
@@ -334,9 +342,18 @@ const IDEPage = () => {
       </div>
 
       {/* 에디터 & 터미널 */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <div style={{ maxWidth:"80%", flex: 1, display: "flex", flexDirection: "column" }}>
         {/* 탭 영역 */}
-        <div style={{ display: "flex", background: "#2d2d2d", color: "white", overflow: "auto"}}>
+        <div
+          style={{
+            height: "50px",
+            display: "flex",
+            background: "#2d2d2d",
+            color: "white",
+            overflowX: "auto",   // 가로 스크롤 추가
+            whiteSpace: "nowrap" // 줄바꿈 방지
+          }}
+        >
           {openFiles.map((file) => (
             <div
               key={file.path}
@@ -344,13 +361,13 @@ const IDEPage = () => {
                 padding: "5px 10px",
                 borderRight: "1px solid #444",
                 background: activeFile?.path === file.path ? "#1e1e1e" : "transparent",
-                display: "flex",
+                display: "inline-flex", // nowrap에 맞게 inline-flex
                 alignItems: "center",
                 cursor: "pointer",
               }}
               onClick={() => openFile(file)}
             >
-              {file.name}
+              {truncateFileName(file.name)}
               {file.modified && "*"}
               <button
                 onClick={(e) => {
