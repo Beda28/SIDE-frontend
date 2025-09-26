@@ -135,11 +135,11 @@ const IDEPage = () => {
 
   const openFile = (file) => {
     // 에디터에 폴더도 열리는데 주석 해제하면 폴더 포커싱이 안돼서 폴더 하위에 새 파일 생성이 안됨
-    // if (file.type === "folder") return;
-
+    
     setActiveFile(file);
     setFileContent(file.content);
-
+    
+    if (file.type === "folder") return;
     setOpenFiles((prev) => {
       if (!prev.find((f) => f.path === file.path)) {
         return [...prev, { ...file, modified: false }]; 
