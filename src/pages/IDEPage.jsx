@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { FaFileAlt, FaTools, FaCodeBranch } from "react-icons/fa";
 import FileTree from "../components/FileTree";
 import ToolsPanel from "../components/ToolsPanel";
@@ -65,7 +65,7 @@ const IDEPage = () => {
       });
     });
     return root;
-  }
+  };
 
   const Add = async (parentNode, type) => {
     const name = prompt(`새 ${type} 이름을 입력하세요:`);
@@ -88,7 +88,7 @@ const IDEPage = () => {
       await axios.post(`${API_BASE}/api/ide/addfile`, {
         fullname: id,
         path: newPath,
-        type, 
+        type,
       });
 
       setFiles((prev) => {
@@ -142,16 +142,18 @@ const IDEPage = () => {
   };
 
   const openFile = (file) => {
-    setActiveFile(file);
-    setFileContent(file.content);
-    
     if (file.type === "folder") return;
-    setOpenFiles((prev) => {
-      if (!prev.find((f) => f.path === file.path)) {
-        return [...prev, { ...file, modified: false }]; 
-      }
-      return prev;
-    });
+
+    const existingFile = openFiles.find((f) => f.path === file.path);
+
+    if (existingFile) {
+      setActiveFile(existingFile);
+      setFileContent(existingFile.content);
+    } else {
+      setActiveFile(file);
+      setFileContent(file.content);
+      setOpenFiles((prev) => [...prev, { ...file, modified: false }]);
+    }
   };
 
   const closeFile = (path) => {
@@ -165,8 +167,8 @@ const IDEPage = () => {
 
   const Start = async () => {
     const res = await axios.post(`${API_BASE}/api/test/start/${id}`);
-    if (res.data.message) {if (!start) setstart(true)}
-  }
+    if (res.data.message) { if (!start) setstart(true); }
+  };
   
   const Clear = async () => {
     try {
@@ -175,7 +177,7 @@ const IDEPage = () => {
     } catch (e) {
       console.error("IDE 세션 정리 실패:", e);
     }
-  }
+  };
 
   useEffect(() => {
     const fakeInterval = setInterval(() => {
@@ -228,6 +230,21 @@ const IDEPage = () => {
   }, [id, type]);
 
   useEffect(() => {
+    const updateFileTreeContent = (nodes, targetPath, newContent) => {
+      return nodes.map(node => {
+        if (node.type === "file" && node.path === targetPath) {
+          return { ...node, content: newContent };
+        }
+        if (node.type === "folder" && node.children) {
+          return {
+            ...node,
+            children: updateFileTreeContent(node.children, targetPath, newContent)
+          };
+        }
+        return node;
+      });
+    };
+
     const SaveFile = async (e) => {
       if (e.ctrlKey && e.key === "s") {
         e.preventDefault();
@@ -245,6 +262,9 @@ const IDEPage = () => {
               f.path === activeFile.path ? { ...f, content: fileContent, modified: false } : f
             )
           );
+
+          setFiles(prevFiles => updateFileTreeContent(prevFiles, activeFile.path, fileContent));
+
         } catch (err) {
           console.error("파일 저장 실패:", err);
           alert("파일 저장 실패");
@@ -260,7 +280,6 @@ const IDEPage = () => {
 
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif" }}>
-      {/* 사이드 패널 버튼 */}
       <div
         style={{
           width: "50px",
@@ -317,7 +336,6 @@ const IDEPage = () => {
         <button onClick={Clear}>삭제</button>
       </div>
 
-      {/* 패널 */}
       <div
         style={{
           width: "300px",
@@ -341,17 +359,15 @@ const IDEPage = () => {
         {activePanel === "git" && <GitPanel repoId={id} />}
       </div>
 
-      {/* 에디터 & 터미널 */}
-      <div style={{ maxWidth:"80%", flex: 1, display: "flex", flexDirection: "column" }}>
-        {/* 탭 영역 */}
+      <div style={{ maxWidth: "80%", flex: 1, display: "flex", flexDirection: "column" }}>
         <div
           style={{
             height: "50px",
             display: "flex",
             background: "#2d2d2d",
             color: "white",
-            overflowX: "auto",   // 가로 스크롤 추가
-            whiteSpace: "nowrap" // 줄바꿈 방지
+            overflowX: "auto",
+            whiteSpace: "nowrap"
           }}
         >
           {openFiles.map((file) => (
@@ -361,7 +377,7 @@ const IDEPage = () => {
                 padding: "5px 10px",
                 borderRight: "1px solid #444",
                 background: activeFile?.path === file.path ? "#1e1e1e" : "transparent",
-                display: "inline-flex", // nowrap에 맞게 inline-flex
+                display: "inline-flex",
                 alignItems: "center",
                 cursor: "pointer",
               }}
@@ -388,7 +404,6 @@ const IDEPage = () => {
           ))}
         </div>
 
-        {/* 에디터 */}
         <div style={{ flex: 1 }}>
           {activeFile ? (
             <Editor
@@ -412,7 +427,6 @@ const IDEPage = () => {
           )}
         </div>
 
-        {/* 터미널 */}
         <div style={{ height: "150px" }}>
           <Terminal start={start} />
         </div>
