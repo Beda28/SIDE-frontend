@@ -134,8 +134,6 @@ const IDEPage = () => {
   };
 
   const openFile = (file) => {
-    // 에디터에 폴더도 열리는데 주석 해제하면 폴더 포커싱이 안돼서 폴더 하위에 새 파일 생성이 안됨
-    
     setActiveFile(file);
     setFileContent(file.content);
     
@@ -160,7 +158,6 @@ const IDEPage = () => {
   const Start = async () => {
     const res = await axios.post(`${API_BASE}/api/test/start/${id}`);
     if (res.data.message) {if (!start) setstart(true)}
-    // 포트반환. 포트가지고 실행시킨거 띄우거나 하는 로직 추가하기
   }
   
   const Clear = async () => {
@@ -339,7 +336,7 @@ const IDEPage = () => {
       {/* 에디터 & 터미널 */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {/* 탭 영역 */}
-        <div style={{ display: "flex", background: "#2d2d2d", color: "white" }}>
+        <div style={{ display: "flex", background: "#2d2d2d", color: "white", overflow: "auto"}}>
           {openFiles.map((file) => (
             <div
               key={file.path}

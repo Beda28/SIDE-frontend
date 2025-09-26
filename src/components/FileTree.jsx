@@ -1,10 +1,13 @@
 import React from "react";
 import FileTreeNode from "./FileTreeNode";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const FileTree = ({ files, onFileSelect, activeFile, onAdd, onDelete, onRename, repoId }) => {
+  const navigate = useNavigate()
+
   const Delete = async () => {
     if (!activeFile) return alert("삭제할 파일/폴더를 선택하세요.");
     const confirmDelete = window.confirm(`정말 "${activeFile.name}"을(를) 삭제하시겠습니까?`);
@@ -43,6 +46,8 @@ const FileTree = ({ files, onFileSelect, activeFile, onAdd, onDelete, onRename, 
 
       onRename(oldPath, newPath);
       alert(`"${activeFile.name}" → "${newName}" 이름 변경 성공`);
+
+      navigate(`/ide/${repoId}`)
     } catch (err) {
       console.error("이름 변경 실패:", err);
       alert("이름 변경 실패");
