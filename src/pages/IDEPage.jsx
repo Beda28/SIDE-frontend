@@ -8,6 +8,7 @@ import Editor from "../components/Editor";
 import Terminal from "../components/Terminal";
 import LoadingScreen from "../components/LoadingScreen";
 import axios from "axios";
+import { AIPannel } from "../components/AIPanel";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -334,6 +335,7 @@ const IDEPage = () => {
         </button>
         <button onClick={Start}>시작</button>
         <button onClick={Clear}>삭제</button>
+        <button onClick={() => setActivePanel("ai")}>검사</button>
       </div>
 
       <div
@@ -357,6 +359,7 @@ const IDEPage = () => {
         )}
         {activePanel === "tools" && <ToolsPanel />}
         {activePanel === "git" && <GitPanel repoId={id} />}
+        {activePanel === "ai" && <AIPannel reponame={activeFile.path} />}
       </div>
 
       <div style={{ maxWidth: "80%", flex: 1, display: "flex", flexDirection: "column" }}>
